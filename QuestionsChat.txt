@@ -1,0 +1,7 @@
+ObstacleMover.cs:
+    - Per què mètode "SetSpeed" "// Si vols que GameManager controli la velocitat"
+
+ObstacleSpawner.cs:
+    - Connectar la velocitat del GameManager (si s'usa)
+
+
