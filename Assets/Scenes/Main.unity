@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &469153423
+--- !u!1 &223959509
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,42 +127,44 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 469153425}
-  - component: {fileID: 469153424}
+  - component: {fileID: 223959511}
+  - component: {fileID: 223959510}
   m_Layer: 0
-  m_Name: Spawners
+  m_Name: ObstacleSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &469153424
+--- !u!114 &223959510
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 469153423}
+  m_GameObject: {fileID: 223959509}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d8171aa52cab36249f0a4d2eb53dc57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleSpawner
-  obstaclePrefabs: []
-  spawnX: 12
-  minY: -3
-  maxY: 3
-  initialSpawnInterval: 1.6
---- !u!4 &469153425
+  obstaclePrefabs:
+  - {fileID: 8616786837506422481, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
+  spawnInterval: 1
+  spawnIntervalVariance: 0.5
+  minY: -3.5
+  maxY: 3.5
+  spawnX: 10
+--- !u!4 &223959511
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 469153423}
+  m_GameObject: {fileID: 223959509}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.6422, y: 0.84791, z: 0}
+  m_LocalPosition: {x: 1.7, y: -1.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -558,108 +560,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f213621a3ebf6b7d965f608ffd9a338, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  thrust: 8
+  baseThrust: 2
+  maxThrust: 8
+  thrustRampUpTime: 1.5
+  gravity: 9.8
   maxY: 4
   minY: -3.8
   maxVerticalSpeed: 6
-  isAlive: 1
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
---- !u!1 &1699067097 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8616786837506422481, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-  m_PrefabInstance: {fileID: 938745149590732146}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1699067100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1699067097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48e82d363023d5c31bbe4cf0d59ede86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ObstacleMover
-  leftSpeed: 5
---- !u!1001 &938745149590732146
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1736856928369479600, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5269478
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2.35026
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 7.56
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.48
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3448526727102454317, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8616786837506422481, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_Name
-      value: Obstacle
-      objectReference: {fileID: 0}
-    - target: {fileID: 8616786837506422481, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      propertyPath: m_TagString
-      value: Obstacle
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8616786837506422481, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1699067100}
-  m_SourcePrefab: {fileID: 100100000, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
+  deathGravityMultiplier: 3
+  deathAngularVelocity: 300
+  settleTolerance: 0.05
+  isAlive: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -667,5 +581,4 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 842783859}
-  - {fileID: 938745149590732146}
-  - {fileID: 469153425}
+  - {fileID: 223959511}

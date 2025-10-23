@@ -1,44 +1,47 @@
+using System.Collections;
 using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour
 {
-    public GameObject[] obstaclePrefabs;
-    public float spawnX = 12f;
-    public float minY = -3f;
-    public float maxY = 3f;
-
-    public float initialSpawnInterval = 1.6f;
-    float spawnTimer = 0f;
-    float spawnInterval;
+    [Header("Spawner Settings")]
+    public GameObject[] obstaclePrefabs;   // Prefabs d'obstacles
+    public float spawnInterval = 2f;       // Temps entre spawns
+    public float spawnIntervalVariance = 0.5f; // Aleatori ±
+    public float minY = -3.5f;             // Altura mínima
+    public float maxY = 3.5f;              // Altura màxima
+    public float spawnX = 10f;             // Posició X fora de la pantalla
 
     void Start()
     {
-        spawnInterval = initialSpawnInterval;
+        StartCoroutine(SpawnObstacles());
     }
 
-    void Update()
+    IEnumerator SpawnObstacles()
     {
-        spawnTimer += Time.deltaTime;
-        if (spawnTimer >= spawnInterval)
+        while (true)
         {
             SpawnObstacle();
-            spawnTimer = 0f;
 
-            // Incrementa la dificultat: reduir interval mínim, però amb un límit
-            spawnInterval = Mathf.Max(0.5f, spawnInterval - 0.002f);
+            // Espera interval amb una mica de variació aleatòria
+            float interval = spawnInterval + Random.Range(-spawnIntervalVariance, spawnIntervalVariance);
+            interval = Mathf.Max(0.1f, interval); // evitar temps negatiu
+            yield return new WaitForSeconds(interval);
         }
     }
 
     void SpawnObstacle()
     {
-        if (obstaclePrefabs.Length == 0) return;
+        // Triar prefab aleatori
+        int index = Random.Range(0, obstaclePrefabs.Length);
+        GameObject obstacle = Instantiate(obstaclePrefabs[index]);
 
-        GameObject pref = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
-        float y = Random.Range(minY, maxY);
-        GameObject ob = Instantiate(pref, new Vector3(spawnX, y, 0), Quaternion.identity);
-        // Connectar la velocitat del GameManager (si s'usa)
-        ObstacleMover mover = ob.GetComponent<ObstacleMover>();
-        if (mover != null) mover.SetSpeed(GameManager.Instance.GameSpeed);
+        // Posició aleatòria en Y dins del rang
+        float yPos = Random.Range(minY, maxY);
+        obstacle.transform.position = new Vector3(spawnX, yPos, 0);
+
+        // Opcional: assignar Tag “Obstacle” i Collider amb IsTrigger
+        obstacle.tag = "Obstacle";
+
+        // Si vols, pots afegir un Rigidbody2D kinemàtic aquí per moure-ho cap a l'esquerra, o fer-ho amb script separat
     }
 }
-
