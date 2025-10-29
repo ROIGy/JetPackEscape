@@ -4,9 +4,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Jetpack")]
-    public float baseThrust = 15f;       // força inicial quan es prem
-    public float maxThrust = 37f;    //Força màxima després d'acumular temps
-    public float thrustRampUpTime = 0.1f; //temps que triga a arribar a maxThrust
+    public float baseThrust = 50f;       // força inicial quan es prem
+    public float maxThrust = 130f;    //Força màxima després d'acumular temps
+    public float thrustRampUpTime = 0.04f; //temps que triga a arribar a maxThrust
     public float gravity = 23f;          //Gravetat normal
     public float maxY = 4f;
     public float minY = -3.8f;

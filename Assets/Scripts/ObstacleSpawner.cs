@@ -5,7 +5,7 @@ public class ObstacleSpawner : MonoBehaviour
 {
     [Header("Spawner Settings")]
     public GameObject[] obstaclePrefabs;   // Prefabs d'obstacles
-    public float spawnInterval = 2f;       // Temps entre spawns
+    public float spawnInterval = 120f;       // Temps entre spawns
     public float spawnIntervalVariance = 0.5f; // Aleatori ±
     public float minY = -3.5f;             // Altura mínima
     public float maxY = 3.5f;              // Altura màxima
@@ -35,9 +35,13 @@ public class ObstacleSpawner : MonoBehaviour
         int index = Random.Range(0, obstaclePrefabs.Length);
         GameObject obstacle = Instantiate(obstaclePrefabs[index]);
 
-        // Posició aleatòria en Y dins del rang
+        // Rotació aleatòria i posició aleatòria en Y dins del rang
         float yPos = Random.Range(minY, maxY);
+        float randomRotation = Random.Range(-45f, 45f); //Angles aleatoris de rotació dels obstacles quan spawnejen
+
         obstacle.transform.position = new Vector3(spawnX, yPos, 0);
+        obstacle.transform.rotation = Quaternion.Euler(0, 0, randomRotation); //Transformar rotació amb valor aleatori
+        
 
         // Opcional: assignar Tag “Obstacle” i Collider amb IsTrigger
         obstacle.tag = "Obstacle";
