@@ -1,37 +1,30 @@
 using UnityEngine;
 using UnityEngine.SceneManagement; // Per reiniciar escenes
 using UnityEngine.UI; // Si vols UI per marcador
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     // Singleton (només una instància del GameManager)
-    public static GameManager Instance;
 
     [Header("Player")]
     public PlayerController player;
 
     [Header("UI")]
-    public Text scoreText;       // Text per mostrar puntuació
-    public Text coinText;        // Text per mostrar monedes
+    public TextMeshProUGUI scoreText;       // Text per mostrar puntuació
+    public TextMeshProUGUI coinText;        // Text per mostrar monedes
     public GameObject gameOverPanel; // Panel Game Over
+    public TextMeshProUGUI finalScoreText; //Score final
 
     [Header("Score Settings")]
     public float scorePerSecond = 10f; // Punts per segon de supervivència
     private float score;
     private int coins;
 
-    private bool isGameOver = false;
+    public static bool isGameOver = false;
 
-    void Awake()
+    void Start()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
         gameOverPanel.SetActive(false);
         score = 0f;
         coins = 0;
@@ -52,14 +45,24 @@ public class GameManager : MonoBehaviour
     // Cridat pel PlayerController quan mor
     public void PlayerDied()
     {
-        isGameOver = true;
-        gameOverPanel.SetActive(true);
+        // Parar spawners (si n'hi ha)
+        //ObstacleSpawner[] spawners = FindObjectsByType<ObstacleSpawner>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        //foreach (var s in spawners) s.StopSpawning();
+
+        // Parar tots els obstacles
+        ObstacleMover[] movers = FindObjectsByType<ObstacleMover>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var m in movers) m.StopMoving();
+
+        // Mostrar UI Game Over
+        if (gameOverPanel != null) gameOverPanel.SetActive(true);
+        if (finalScoreText != null) finalScoreText.text = "Score: " + Mathf.FloorToInt(score) + "\nCoins: " + coins;
     }
 
     // Cridat per UI button "Replay"
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        isGameOver = false;
     }
 
     // Cridat quan el jugador recull una moneda

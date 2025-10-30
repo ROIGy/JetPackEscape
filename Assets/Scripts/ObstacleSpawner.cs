@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static GameManager;
 
 public class ObstacleSpawner : MonoBehaviour
 {
@@ -18,7 +19,8 @@ public class ObstacleSpawner : MonoBehaviour
 
     IEnumerator SpawnObstacles()
     {
-        while (true)
+        //El valor isGameOver de GameManager fa que s'executi el spawn o no spawn d'obstacles
+        while (!isGameOver)
         {
             SpawnObstacle();
 

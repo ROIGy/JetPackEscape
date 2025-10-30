@@ -1,16 +1,18 @@
 using System.Collections;
 using UnityEngine;
+using static GameManager;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Jetpack")]
-    public float baseThrust = 50f;       // força inicial quan es prem
-    public float maxThrust = 130f;    //Força màxima després d'acumular temps
-    public float thrustRampUpTime = 0.04f; //temps que triga a arribar a maxThrust
-    public float gravity = 23f;          //Gravetat normal
+    public float baseThrust = 0.05f;       // força inicial quan es prem
+    public float maxThrust = 105f;    //Força màxima després d'acumular temps
+    public float thrustRampUpTime = 0.005f; //temps que triga a arribar a maxThrust
+    public float gravity = 1000f;          //Gravetat normal
     public float maxY = 4f;
     public float minY = -3.8f;
-    public float maxVerticalSpeed = 6f;
+
+    //public float maxVerticalSpeed = 6f;
 
 
 
@@ -25,12 +27,13 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     public bool isAlive = true;
     float thrustTime = 0f;
+    public GameManager gaMa;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         // Congel·lem la rotació inicialment
-        rb.gravityScale = gravity / 9.8f; //Ajustar segons "Rigidbody2D" (segons gust)
+        rb.gravityScale = gravity / 5f; //Ajustar segons "Rigidbody2D" (segons gust)
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
@@ -49,8 +52,12 @@ public class PlayerController : MonoBehaviour
             float t = Mathf.Clamp01(thrustTime / thrustRampUpTime);
             float thrust = Mathf.Lerp(baseThrust, maxThrust, t);
 
+            rb.AddForce(Vector2.up * 10f, ForceMode2D.Force);
+
             //rb.linearVelocity = new Vector2(rb.linearVelocity.x, thrust);
-            rb.linearVelocity = new Vector2(0f, thrust);
+
+            //Més recent
+            //rb.linearVelocity = new Vector2(0f, thrust);
         }
         else
         {
@@ -96,8 +103,18 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator DieAndFall()
     {
+        //Passem variable de GameManager a true per a que deixin d'spawnejar nous obstacles
+        isGameOver = true;
+        
         // Desactivar moviment
         isAlive = false;
+
+        // Parar tots els obstacles existents
+        ObstacleMover[] allObstacles = FindObjectsByType<ObstacleMover>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (ObstacleMover obs in allObstacles)
+        {
+            obs.StopMoving();
+        }
 
         // Permetre rotació i augmenta gravetat per caiguda ràpida
         rb.constraints = RigidbodyConstraints2D.None;
@@ -130,11 +147,9 @@ public class PlayerController : MonoBehaviour
                          RigidbodyConstraints2D.FreezePositionY |
                          RigidbodyConstraints2D.FreezeRotation;
 
-        // Notifica al GameManager DE MOMENT NO HEM FET GAMEMANAGER
 
-        //if (GameManager.Instance != null)
-        //{
-        //    GameManager.Instance.PlayerDied();
-        //}
+        // Notifica al GameManager
+        gaMa.PlayerDied();
+        
     }
 }
