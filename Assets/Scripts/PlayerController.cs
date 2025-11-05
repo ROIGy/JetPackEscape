@@ -6,10 +6,10 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Jetpack")]
     public float baseThrust = 0.05f;       // força inicial quan es prem
-    public float maxThrust = 105f;    //Força màxima després d'acumular temps
+    public float maxThrust = 10f;    //Força màxima després d'acumular temps
     public float thrustRampUpTime = 0.005f; //temps que triga a arribar a maxThrust
     public float gravity = 1000f;          //Gravetat normal
-    public float maxY = 4f;
+    //public float maxY = 4f;
     public float minY = -3.8f;
 
     //public float maxVerticalSpeed = 6f;
@@ -33,11 +33,11 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         // Congel·lem la rotació inicialment
-        rb.gravityScale = gravity / 5f; //Ajustar segons "Rigidbody2D" (segons gust)
+        rb.gravityScale = gravity / 8f; //Ajustar segons "Rigidbody2D" (segons gust)
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // Moviment només si està viu
         if (!isAlive) return;
@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
             float t = Mathf.Clamp01(thrustTime / thrustRampUpTime);
             float thrust = Mathf.Lerp(baseThrust, maxThrust, t);
 
-            rb.AddForce(Vector2.up * 10f, ForceMode2D.Force);
+            rb.AddForce(Vector2.up * thrust, ForceMode2D.Force);
 
             //rb.linearVelocity = new Vector2(rb.linearVelocity.x, thrust);
 
@@ -66,14 +66,14 @@ public class PlayerController : MonoBehaviour
 
         //Clamp vertical (versió amb thrust exponencial)
         // Limit vertical speed i evitar sortir del rang
-        if (rb.position.y > maxY && rb.linearVelocity.y > 0)
-        {
-            rb.linearVelocity = new Vector2(0f, 0f);
-        }
-        else if (rb.position.y < minY && rb.linearVelocity.y < 0)
-        {
-            rb.linearVelocity = new Vector2(0f, 0f);
-        }
+        //if (rb.position.y > maxY && rb.linearVelocity.y > 0)
+        //{
+        //    rb.linearVelocity = new Vector2(0f, 0f);
+        //}
+        //else if (rb.position.y < minY && rb.linearVelocity.y < 0)
+        //{
+        //    rb.linearVelocity = new Vector2(0f, 0f);
+        //}
 
 
 
