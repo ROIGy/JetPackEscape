@@ -2,29 +2,24 @@ using UnityEngine;
 
 public class ObstacleMover : MonoBehaviour
 {
-    public float leftSpeed = 5f;
-    private bool isMoving = true;
+    // Ja no necessitem una variable pública de velocitat aquí,
+    // perquè la llegirem del GameManager.
+    
     void Update()
     {
-        if (isMoving)
-        {
-            transform.Translate(Vector2.left * leftSpeed * Time.deltaTime, Space.World);
+        // Si el joc s'ha acabat, no ens movem
+        if (GameManager.isGameOver) return;
 
-        }
-        // Destruir quan fora de pantalla (x < -20 per exemple)
+        // Obtenim la velocitat global actual
+        float currentSpeed = GameManager.Instance.gameSpeed;
+
+        // Ens movem cap a l'esquerra a la velocitat que dicta el GameManager
+        transform.Translate(Vector2.left * currentSpeed * Time.deltaTime, Space.World);
+
+        // Destruir quan fora de pantalla
         if (transform.position.x < -20f) Destroy(gameObject);
     }
-
-    // Permet que el GameManager o PlayerController pari tots els obstacles
-    public void StopMoving()
-    {
-        isMoving = false;
-    }
-
-    // Optional: si vols que la velocitat sigui controlada pel GameManager
-    public void SetSpeed(float speed)
-    {
-        leftSpeed = speed;
-    }
+    
+    // Ja no cal el mètode StopMoving() perquè comprovem isGameOver a cada frame
 }
 

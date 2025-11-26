@@ -1,93 +1,76 @@
 using System.Collections;
 using UnityEngine;
-using static GameManager; // Ja ho tenies
+using static GameManager;
 
 public class ObstacleSpawner : MonoBehaviour
 {
-    [Header("Prefabs")]
+    [Header("Configuració d'Obstacles")]
     public GameObject[] obstaclePrefabs;
 
-    [Header("Posició de Spawn")]
-    public float minY = -3.5f;
-    public float maxY = 3.5f;
-    public float spawnX = 10f;
-    public float spawnIntervalVariance = 0.2f; // He baixat la variància per a més control
+    [Header("Posicions (Carrils)")]
+    // Definim 4 alçades fixes. Ajusta aquests valors a l'Inspector per quadrar amb la teva pantalla.
+    // Exemple: 2.5 (Dalt), 1.0 (Mig-Dalt), -1.0 (Mig-Baix), -2.5 (Baix)
+    public float[] yPositions = new float[] { 3f, 0f, -3.3f};
 
-    [Header("Dificultat Dinàmica")]
-    // NOU: L'interval quan comença el joc (ex: 3 segons)
-    public float initialSpawnInterval = 3.0f;
-    
-    // NOU: L'interval mínim al que arribarà (ex: 0.8 segons)
-    public float minSpawnInterval = 0.8f;
-    
-    // NOU: Quants segons triga a passar de 'initial' a 'min' (ex: 60 segons)
-    public float timeToReachMaxDifficulty = 60f;
+    [Header("Rotacions")]
+    // 0 = Horitzontal, 90 = Vertical, 45 = Diagonal /, -45 = Diagonal \
+    public float[] possibleRotations = new float[] { 0f, 90f, 45f, -45f };
 
-    // NOU: Registrarem quan ha començat el joc
-    private float startTime;
-    
+    [Header("Temps de Spawn")]
+    public float spawnX = 12f;             // Posició X on neixen (fora pantalla)
+    public float initialInterval = 2.0f;   // Temps inicial entre obstacles
+    public float minInterval = 0.8f;       // Temps mínim (màxima dificultat)
+    public float decreaseRate = 0.05f;     // Quant baixa l'interval cada vegada (acceleració)
+
+    private float currentInterval;
+
     void Start()
     {
-        // NOU: Guardem el moment exacte en què comença el joc
-        startTime = Time.time; 
-        StartCoroutine(SpawnObstacles());
+        currentInterval = initialInterval;
+        StartCoroutine(SpawnLoop());
     }
 
-    IEnumerator SpawnObstacles()
+    IEnumerator SpawnLoop()
     {
+        // Petit retard inicial per no començar de cop
+        yield return new WaitForSeconds(1f);
+
         while (!isGameOver)
         {
-            // NOU: Ja no cridem a SpawnObstacle() aquí directament,
-            // ho fem després de calcular el temps.
+            SpawnObstacle();
 
-            // --- CÀLCUL DE DIFICULTAT ---
+            // Esperem el temps que toqui
+            yield return new WaitForSeconds(currentInterval);
 
-            // 1. Calculem el temps que ha passat des de l'inici
-            float elapsedTime = Time.time - startTime;
-
-            // 2. Calculem el percentatge de dificultat (un valor de 0.0 a 1.0)
-            // Si han passat 30s de 60s, 'difficultyPercent' serà 0.5
-            float difficultyPercent = Mathf.Clamp01(elapsedTime / timeToReachMaxDifficulty);
-
-            // 3. Calculem l'interval actual
-            // Mathf.Lerp interpola entre A i B, basat en el percentatge C.
-            // Si el percentatge és 0.0, retorna initialSpawnInterval (3.0)
-            // Si el percentatge és 1.0, retorna minSpawnInterval (0.8)
-            // Si el percentatge és 0.5, retorna el punt mig (aprox 1.9)
-            float currentInterval = Mathf.Lerp(initialSpawnInterval, minSpawnInterval, difficultyPercent);
-
-            // 4. Afegim la variància
-            float interval = currentInterval + Random.Range(-spawnIntervalVariance, spawnIntervalVariance);
-            // Assegurem que mai sigui menys de 0.1s (per seguretat)
-            interval = Mathf.Max(0.1f, interval);
-
-            // --- FI DEL CÀLCUL ---
-
-            // LÍNIA DE COMPROVACIÓ:
-            Debug.Log("Dificultat: " + (difficultyPercent * 100).ToString("F0") + "% | Pròxim spawn en: " + interval.ToString("F2") + "s");
-
-            // 5. Ara SÍ, esperem el temps calculat
-            yield return new WaitForSeconds(interval);
-
-            // 6. I (després d'esperar) fem spawn de l'obstacle
-            // Això evita que el primer obstacle surti al segon 0.
-            if (!isGameOver) // Comprovem de nou per si el jugador ha mort durant l'espera
+            // Reduïm l'interval per fer-ho més difícil (fins al límit)
+            if (currentInterval > minInterval)
             {
-                SpawnObstacle();
+                currentInterval -= decreaseRate;
             }
         }
     }
 
     void SpawnObstacle()
     {
-        int index = Random.Range(0, obstaclePrefabs.Length);
-        GameObject obstacle = Instantiate(obstaclePrefabs[index]);
+        // 1. Instanciar prefab aleatori
+        if (obstaclePrefabs.Length == 0) return;
+        int prefabIndex = Random.Range(0, obstaclePrefabs.Length);
+        GameObject obj = Instantiate(obstaclePrefabs[prefabIndex]);
 
-        float yPos = Random.Range(minY, maxY);
-        float randomRotation = Random.Range(-45f, 45f);
+        // 2. Triar un Carril (Y) aleatori dels 4 disponibles
+        // Això garanteix que mai surti "una mica més amunt", sempre al lloc exacte.
+        int laneIndex = Random.Range(0, yPositions.Length);
+        float chosenY = yPositions[laneIndex];
 
-        obstacle.transform.position = new Vector3(spawnX, yPos, 0);
-        obstacle.transform.rotation = Quaternion.Euler(0, 0, randomRotation);
-        obstacle.tag = "Obstacle";
+        // 3. Triar una Rotació aleatòria de les 4 disponibles
+        int rotIndex = Random.Range(0, possibleRotations.Length);
+        float chosenRot = possibleRotations[rotIndex];
+
+        // 4. Assignar posició i rotació
+        obj.transform.position = new Vector3(spawnX, chosenY, 0);
+        obj.transform.rotation = Quaternion.Euler(0, 0, chosenRot);
+
+        // Opcional: Assignar Tag per seguretat (si no el té el prefab)
+        obj.tag = "Obstacle";
     }
 }

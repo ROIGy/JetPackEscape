@@ -181,13 +181,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleSpawner
   obstaclePrefabs:
   - {fileID: 8616786837506422481, guid: 055534522755c56ef9d3e7bcdcb1d654, type: 3}
-  minY: -3.5
-  maxY: 3.5
+  yPositions:
+  - 3
+  - 0
+  - -3.3
+  possibleRotations:
+  - 0
+  - 90
+  - 45
+  - -45
   spawnX: 10
-  spawnIntervalVariance: 3
-  initialSpawnInterval: 3
-  minSpawnInterval: 0.8
-  timeToReachMaxDifficulty: 60
+  initialInterval: 2
+  minInterval: 0.8
+  decreaseRate: 0.05
 --- !u!4 &223959511
 Transform:
   m_ObjectHideFlags: 0
@@ -373,8 +379,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000024796, y: -73.772}
-  m_SizeDelta: {x: 178.07, y: 31.7877}
+  m_AnchoredPosition: {x: 52.66349, y: -90.348816}
+  m_SizeDelta: {x: 283.397, y: 64.9413}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &310395003
 MonoBehaviour:
@@ -1006,12 +1012,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f5b0cc91f11e22783a28937823ae02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  player: {fileID: 842783860}
+  gameSpeed: 5
+  maxGameSpeed: 15
+  speedIncreaseRate: 0.1
+  scoreMultiplier: 1
   scoreText: {fileID: 721197868}
   coinText: {fileID: 772024829}
   gameOverPanel: {fileID: 1580057779}
   finalScoreText: {fileID: 310395003}
-  scorePerSecond: 10
 --- !u!4 &625903607
 Transform:
   m_ObjectHideFlags: 0

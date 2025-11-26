@@ -1,73 +1,93 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Per reiniciar escenes
-using UnityEngine.UI; // Si vols UI per marcador
-using TMPro;
+using UnityEngine.SceneManagement;
+using TMPro; // O UnityEngine.UI si fas servir Text normal
 
 public class GameManager : MonoBehaviour
 {
-    // Singleton (només una instància del GameManager)
+    // --- SINGLETON (Per accedir-hi des de qualsevol lloc) ---
+    public static GameManager Instance;
 
-    [Header("Player")]
-    public PlayerController player;
+    void Awake()
+    {
+        if (Instance == null) Instance = this;//pAN
+        else Destroy(gameObject);
+    }
+    // -------------------------------------------------------
 
-    [Header("UI")]
-    public TextMeshProUGUI scoreText;       // Text per mostrar puntuació
-    public TextMeshProUGUI coinText;        // Text per mostrar monedes
-    public GameObject gameOverPanel; // Panel Game Over
-    public TextMeshProUGUI finalScoreText; //Score final
+    [Header("Configuració de Velocitat Global")]
+    public float gameSpeed = 5f;          // Velocitat inicial (metres/segon)
+    public float maxGameSpeed = 15f;      // Velocitat màxima
+    public float speedIncreaseRate = 0.1f; // Quant augmenta la velocitat cada segon
 
-    [Header("Score Settings")]
-    public float scorePerSecond = 10f; // Punts per segon de supervivència
+    [Header("Configuració de Puntuació")]
+    // Si poses això a 1, el score són metres reals.
+    // Si vols que pugi més lent, posa 0.5. Si vols més ràpid, posa 2.
+    public float scoreMultiplier = 1f; 
+
+    [Header("Referències UI")]
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI coinText;
+    public GameObject gameOverPanel;
+    public TextMeshProUGUI finalScoreText;
+
+    // Estat del joc
     private float score;
     private int coins;
-
     public static bool isGameOver = false;
 
     void Start()
     {
-        gameOverPanel.SetActive(false);
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
         score = 0f;
         coins = 0;
+        isGameOver = false;
+        
+        // Assegurem que el joc no estigui pausat al reiniciar
+        Time.timeScale = 1f; 
     }
 
     void Update()
     {
         if (isGameOver) return;
 
-        // Incrementar puntuació amb el temps
-        score += scorePerSecond * Time.deltaTime;
+        // 1. AUGMENTAR LA VELOCITAT DEL JOC PROGRESSIVAMENT
+        if (gameSpeed < maxGameSpeed)
+        {
+            gameSpeed += speedIncreaseRate * Time.deltaTime;
+        }
+
+        // 2. AUGMENTAR EL SCORE BASAT EN LA VELOCITAT
+        // Distància = Velocitat * Temps. Això és físicament correcte.
+        score += gameSpeed * scoreMultiplier * Time.deltaTime;
 
         // Actualitzar UI
-        if (scoreText != null) scoreText.text = "Score: " + Mathf.FloorToInt(score);
-        if (coinText != null) coinText.text = "Coins: " + coins;
+        if (scoreText != null) scoreText.text = $"{Mathf.FloorToInt(score)} M" ;
+        if (coinText != null) coinText.text = coins  + " ₵";
     }
 
-    // Cridat pel PlayerController quan mor
     public void PlayerDied()
     {
-        // Parar spawners (si n'hi ha)
-        //ObstacleSpawner[] spawners = FindObjectsByType<ObstacleSpawner>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        //foreach (var s in spawners) s.StopSpawning();
+        isGameOver = true;
 
-        // Parar tots els obstacles
-        ObstacleMover[] movers = FindObjectsByType<ObstacleMover>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var m in movers) m.StopMoving();
+        // Opcional: Si vols efecte "càmera lenta" al morir
+        // Time.timeScale = 0.5f; 
 
-        // Mostrar UI Game Over
+        // Aturar obstacles visualment ja no cal fer-ho un per un si el mover llegeix isGameOver,
+        // però mantenim la lògica de UI.
+        
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
-        if (finalScoreText != null) finalScoreText.text = "Score: " + Mathf.FloorToInt(score) + "\nCoins: " + coins;
+        if (finalScoreText != null) 
+            finalScoreText.text = "SCORE: " + Mathf.FloorToInt(score) + "M\nCOINS : " + coins;
     }
 
-    // Cridat per UI button "Replay"
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        isGameOver = false;
     }
 
-    // Cridat quan el jugador recull una moneda
     public void AddCoin(int amount = 1)
     {
         coins += amount;
+        if (coinText != null) coinText.text = "Coins: " + coins;
     }
 }
