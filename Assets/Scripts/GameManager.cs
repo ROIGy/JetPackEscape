@@ -29,6 +29,11 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI coinText;
     public GameObject gameOverPanel;
     public TextMeshProUGUI finalScoreText;
+    
+    [Header("UI Game Over")]
+    public GameObject saveScorePanel;
+    public TMPro.TMP_InputField nameInputField;
+    public GameObject buttonsPanel;
 
     // Estat del joc
     private float score;
@@ -77,7 +82,7 @@ public class GameManager : MonoBehaviour
         
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
         if (finalScoreText != null) 
-            finalScoreText.text = "SCORE: " + Mathf.FloorToInt(score) + "M\nCOINS : " + coins;
+            finalScoreText.text = "METERS: " + Mathf.FloorToInt(score) + "\nCOINS : " + coins;
     }
 
     public void RestartGame()
@@ -85,9 +90,36 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    //Lògica dels panells fills de GameOverPanel
+    // Aquesta funció la crida el botó "Save Score"
+    public void OpenRegisterScreen()
+    {
+        buttonsPanel.SetActive(false); // Amaguem els botons de Retry
+        saveScorePanel.SetActive(true); // Mostrem el camp per escriure
+    }
+
+    public void SubmitHighscore()
+    {
+        string playerName = nameInputField.text;
+        
+        if (string.IsNullOrEmpty(playerName)) playerName = "Anonymous";
+
+        // GUARDEM (Cridem al nostre manager del Pas 1)
+        // Passem score (metres) i coins que ja tenim al GameManager
+        HighscoreManager.AddHighscore(playerName, score, coins);
+
+        //GoToMainMenu();
+    }
+
     public void AddCoin(int amount = 1)
     {
         coins += amount;
         if (coinText != null) coinText.text = "Coins: " + coins;
     }
+
+    public void GoToMainMenu()
+        {
+            Time.timeScale = 1f; // Important: Despausar el joc abans de sortir
+            SceneManager.LoadScene("MainMenu"); // Assegura't que l'escena es diu així
+        }
 }
