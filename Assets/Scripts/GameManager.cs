@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
 using TMPro; // O UnityEngine.UI si fas servir Text normal
 
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI coinText;
     public GameObject gameOverPanel;
     public TextMeshProUGUI finalScoreText;
+    public TextMeshProUGUI cantSaveScoreToast;
     
     [Header("UI Game Over")]
     public GameObject saveScorePanel;
@@ -39,6 +41,7 @@ public class GameManager : MonoBehaviour
     private float score;
     private int coins;
     public static bool isGameOver = false;
+    public static bool isScoreSaved = false;
 
     void Start()
     {
@@ -46,6 +49,7 @@ public class GameManager : MonoBehaviour
         score = 0f;
         coins = 0;
         isGameOver = false;
+        cantSaveScoreToast.gameObject.SetActive(false);
         
         // Assegurem que el joc no estigui pausat al reiniciar
         Time.timeScale = 1f; 
@@ -92,23 +96,42 @@ public class GameManager : MonoBehaviour
 
     //Lògica dels panells fills de GameOverPanel
     // Aquesta funció la crida el botó "Save Score"
-    public void OpenRegisterScreen()
+    public void OpenSaveScorePanel()
     {
-        buttonsPanel.SetActive(false); // Amaguem els botons de Retry
-        saveScorePanel.SetActive(true); // Mostrem el camp per escriure
+        if (!isScoreSaved)
+        {
+            buttonsPanel.SetActive(false); // Amaguem els botons de Retry
+            saveScorePanel.SetActive(true); // Mostrem el camp per escriure
+        }
+        else
+        {
+            StartCoroutine(cantSaveToastTimer());
+        }
+
+    }
+    
+    private IEnumerator cantSaveToastTimer()
+    {
+        cantSaveScoreToast.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        cantSaveScoreToast.gameObject.SetActive(false);
     }
 
-    public void SubmitHighscore()
+    public void SaveScoreButton()
     {
         string playerName = nameInputField.text;
-        
+
         if (string.IsNullOrEmpty(playerName)) playerName = "Anonymous";
 
         // GUARDEM (Cridem al nostre manager del Pas 1)
         // Passem score (metres) i coins que ja tenim al GameManager
         HighscoreManager.AddHighscore(playerName, score, coins);
 
-        //GoToMainMenu();
+        //Ocultem el SaveScorePanel i tornem a mostrar el buttonsPanel
+        saveScorePanel.SetActive(false);
+        buttonsPanel.SetActive(true);
+        //Canviem l'estat del boolean a true per assegurar que no es pugui guardar dues vegades el mateix score
+        isScoreSaved = true;
     }
 
     public void AddCoin(int amount = 1)

@@ -11,7 +11,7 @@ public class ObstacleSpawner : MonoBehaviour
     [Header("Posicions (Carrils)")]
     // Definim 4 alçades fixes. Ajusta aquests valors a l'Inspector per quadrar amb la teva pantalla.
     // Exemple: 2.5 (Dalt), 1.0 (Mig-Dalt), -1.0 (Mig-Baix), -2.5 (Baix)
-    public float[] yPositions = new float[] { 3f, 0f, -3.3f };
+    public float[] yPositions = new float[] { 3f, 0f, -3.4f };
 
     [Header("Rotacions")]
     // 0 = Horitzontal, 90 = Vertical, 45 = Diagonal /, -45 = Diagonal \
