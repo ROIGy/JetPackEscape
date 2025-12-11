@@ -109,8 +109,8 @@ public class ObstacleSpawner : MonoBehaviour
         // Si l'obstacle és horitzontal I està en un dels extrems...
         if (isHorizontal && (isTopLane || isBottomLane))
         {
-            // Posem 15% de probabilitat que, en cas que es compleixin les condicions, spawnejin monedes al forat
-            if (Random.Range(0, 100) < 90) 
+            // Posem 25% de probabilitat que, en cas que es compleixin les condicions, spawnejin monedes al forat
+            if (Random.Range(0, 100) < 25) 
             {
                 if (coinPatternPrefabs.Length > 0)
                 {

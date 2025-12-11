@@ -941,7 +941,7 @@ GameObject:
   - component: {fileID: 6771222752022864327}
   - component: {fileID: 8485011790772734472}
   m_Layer: 0
-  m_Name: Pattern_Line_6
+  m_Name: Pattern_Line_asc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
