@@ -33,6 +33,9 @@ public class PlayerController : MonoBehaviour
     public bool isAlive = true;
     float thrustTime = 0f;
     
+    [Header("VFX")]
+    public ParticleSystem jetpackParticles;
+
     public GameManager gaMa;
 
     void Awake()
@@ -66,8 +69,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Moviment només si està viu
-        if (!isAlive) return;
+        var emission = jetpackParticles.emission;
+
+        // Moviment i emissió de partícules només si està viu
+        if (!isAlive)
+        {
+            emission.enabled = false;
+            return;
+        } 
         
         // --- CÀLCUL DEL MULTIPLICADOR DE FÍSICA ---
         float physicsMultiplier = 1f;
@@ -108,14 +117,13 @@ public class PlayerController : MonoBehaviour
 
             rb.AddForce(Vector2.up * thrust, ForceMode2D.Force);
 
-            //rb.linearVelocity = new Vector2(rb.linearVelocity.x, thrust);
-
-            //Més recent
-            //rb.linearVelocity = new Vector2(0f, thrust);
+            //Activem emissió de partícules
+            emission.enabled = true;
         }
         else
         {
             thrustTime = 0f; // reinici quan deixes de prémer
+            emission.enabled = false;
         }
 
         
