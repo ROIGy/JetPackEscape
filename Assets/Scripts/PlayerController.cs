@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using static GameManager;
 
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Jetpack")]
@@ -21,6 +22,10 @@ public class PlayerController : MonoBehaviour
     public float deathGravityMultiplier = 3f;
     public float deathAngularVelocity = 300f;
     public float settleTolerance = 0.05f;
+
+    [Header("Audio")]
+    public AudioClip deathSound; // <--- Arrossega aquí el so d'explosió/xoc
+    public AudioSource jetpackSource;
 
 // --- VARIABLES PER A LA FÍSICA DINÀMICA ---
     private float initialGravity;
@@ -75,6 +80,7 @@ public class PlayerController : MonoBehaviour
         if (!isAlive)
         {
             emission.enabled = false;
+            if (jetpackSource.isPlaying) jetpackSource.Stop();
             return;
         } 
         
@@ -119,11 +125,22 @@ public class PlayerController : MonoBehaviour
 
             //Activem emissió de partícules
             emission.enabled = true;
+
+            if (!jetpackSource.isPlaying)
+            {
+                jetpackSource.Play();
+            }
         }
         else
         {
             thrustTime = 0f; // reinici quan deixes de prémer
             emission.enabled = false;
+
+            // Si deixem de prémer i sona, parem
+            if (jetpackSource.isPlaying)
+            {
+                jetpackSource.Stop();
+            }
         }
 
         
@@ -148,12 +165,21 @@ public class PlayerController : MonoBehaviour
         // Desactivar moviment
         isAlive = false;
 
-        // Parar tots els obstacles existents
-        //ObstacleMover[] allObstacles = FindObjectsByType<ObstacleMover>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        //foreach (ObstacleMover obs in allObstacles)
-        //{
-        //    obs.StopMoving();
-        //}
+        // --- GESTIÓ D'ÀUDIO ---
+
+        // 1. ATURAR MÚSICA DE FONS
+        // Busquem l'objecte que hem anomenat "GameMusic"
+        GameObject bgMusic = GameObject.Find("GameMusic");
+        if (bgMusic != null)
+        {
+            bgMusic.GetComponent<AudioSource>().Stop();
+        }
+
+        // 2. REPRODUIR SO DE MORT
+        if (deathSound != null)
+        {
+            AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position, 1.0f);
+        }
 
         // Permetre rotació i augmenta gravetat per caiguda ràpida
         rb.constraints = RigidbodyConstraints2D.None;

@@ -3,7 +3,7 @@ using UnityEngine;
 public class Coin : MonoBehaviour
 {
     public int coinValue = 1; // Quantes monedes dóna
-    public AudioClip collectSound; // Opcional per més endavant
+    public AudioClip coinSound; // Opcional per més endavant
     // Pots afegir un so de "pickup" aquí si vols
     // public AudioClip pickupSound; 
 
@@ -20,7 +20,14 @@ public class Coin : MonoBehaviour
             // if (pickupSound != null) AudioSource.PlayClipAtPoint(pickupSound, transform.position);
 
             // 3. Destruïm la moneda
-            Destroy(gameObject);
         }
+
+        if (coinSound != null)
+        {
+            // Crea un so a la posició de la càmera perquè se senti fort i clar
+            AudioSource.PlayClipAtPoint(coinSound, Camera.main.transform.position, 0.5f);
+        }
+
+        Destroy(gameObject);
     }
 }

@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
-using TMPro; // O UnityEngine.UI si fas servir Text normal
+using TMPro;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -53,6 +54,14 @@ public class GameManager : MonoBehaviour
         
         // Assegurem que el joc no estigui pausat al reiniciar
         Time.timeScale = 1f; 
+
+        // Recuperem el volum guardat (o 1 si és la primera vegada)
+        float savedVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        
+        // Apliquem el volum al "oïda global" del joc
+        AudioListener.volume = savedVolume;
+
+        
     }
 
     void Update()
@@ -145,4 +154,10 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f; // Important: Despausar el joc abans de sortir
             SceneManager.LoadScene("MainMenu"); // Assegura't que l'escena es diu així
         }
+
+    public void SetMasterVolume(float volume)
+    {
+        AudioListener.volume = volume;
+        PlayerPrefs.SetFloat("MasterVolume", volume); // Guardem perquè recordi el volum
+    }
 }

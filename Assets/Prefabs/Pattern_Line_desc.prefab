@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   coinValue: 1
-  collectSound: {fileID: 0}
+  coinSound: {fileID: 8300000, guid: 5a3d3310687c65f4d946c551f30e7ac6, type: 3}
 --- !u!1 &6250931438861695827
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   coinValue: 1
-  collectSound: {fileID: 0}
+  coinSound: {fileID: 8300000, guid: 5a3d3310687c65f4d946c551f30e7ac6, type: 3}
 --- !u!1 &7680926401757406972
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,7 +464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   coinValue: 1
-  collectSound: {fileID: 0}
+  coinSound: {fileID: 8300000, guid: 5a3d3310687c65f4d946c551f30e7ac6, type: 3}
 --- !u!1 &8184917015433637458
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,7 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   coinValue: 1
-  collectSound: {fileID: 0}
+  coinSound: {fileID: 8300000, guid: 5a3d3310687c65f4d946c551f30e7ac6, type: 3}
 --- !u!1 &8552209717260369459
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,7 +774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   coinValue: 1
-  collectSound: {fileID: 0}
+  coinSound: {fileID: 8300000, guid: 5a3d3310687c65f4d946c551f30e7ac6, type: 3}
 --- !u!1 &8864006714568329699
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,7 +929,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   coinValue: 1
-  collectSound: {fileID: 0}
+  coinSound: {fileID: 8300000, guid: 5a3d3310687c65f4d946c551f30e7ac6, type: 3}
 --- !u!1 &8999767966160911333
 GameObject:
   m_ObjectHideFlags: 0
